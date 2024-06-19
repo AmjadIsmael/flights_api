@@ -45,9 +45,4 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
-
-    public function getDeletedAtColumn()
-    {
-        return 'deleted_at';
-    }
 }
