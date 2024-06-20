@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('password')->unique();
             $table->date('date_of_birth');
             $table->date('passport_expiry');
+            $table->foreign('flight_id')->references('id')->on('flights')->onDelete('set null');
             $table->timestamps();
             $table->softDeletes();
         });
