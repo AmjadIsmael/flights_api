@@ -9,13 +9,8 @@ use App\Models\Passenger;
 class Flight extends Model
 {
     use HasFactory;
-    protected $fillable = [
-        'number',
-        'departure_city',
-        'arrival_city',
-        'departure_time',
-        'arrival_time',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
+
     public function passengers()
     {
         return $this->hasMany(Passenger::class);
