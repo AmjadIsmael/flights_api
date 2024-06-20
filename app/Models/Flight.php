@@ -5,15 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Passenger;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Flight extends Model
 {
     use HasFactory;
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    public function passengers(): BelongsToMany
+    public function passenger(): BelongsTo
     {
-        return $this->belongsToMany(Passenger::class, 'passenger_flight');
+        return $this->belongsTo(Passenger::class);
     }
 }
