@@ -20,8 +20,8 @@ class FlightFactory extends Factory
             'number' => $this->faker->unique()->numerify('####'),
             'departure_city' => $this->faker->city(),
             'arrival_city' => $this->faker->city(),
-            'departure_time' => $this->faker->time('H:i:s'),
-            'arrival_time' => $this->faker->time('H:i:s'),
+            'departure_time' => $this->faker->dateTime()->format('Y-m-d H:i:s'),
+            'arrival_time' => $this->faker->dateTime()->format('Y-m-d H:i:s'),
         ];
     }
 }
