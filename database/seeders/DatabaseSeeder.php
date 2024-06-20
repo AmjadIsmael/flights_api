@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             PassengerSeeder::class,
             FlightSeeder::class,
+            PassengerFlightTableSeeder::class,
         ]);
         //  \App\Models\Passenger::factory(1000)->create();
         //\App\Models\Flight::factory(50)->create();
