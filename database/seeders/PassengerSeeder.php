@@ -12,6 +12,6 @@ class PassengerSeeder extends Seeder
      */
     public function run(): void
     {
-        //\App\Models\Passenger::factory(1000)->create();
+        \App\Models\Passenger::factory(1000)->create();
     }
 }
