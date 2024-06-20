@@ -13,15 +13,11 @@ return new class extends Migration
     {
         Schema::create('passengers_flights', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('passenger_id');
-            $table->unsignedBigInteger('flight_id');
+            $table->foreignId('passenger_id')->constrained()->onDelete("cascade");
+            $table->foreignId('flight_id')->constrained()->onDelete("cascade");
             $table->timestamps();
-
-            $table->foreign('passenger_id')->references('id')->on('passengers')->onDelete('cascade');
-            $table->foreign('flight_id')->references('id')->on('flights')->onDelete('cascade');
         });
     }
-
     /**
      * Reverse the migrations.
      */
