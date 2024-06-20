@@ -20,6 +20,7 @@ return new class extends Migration
             $table->date('date_of_birth');
             $table->date('passport_expiry');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
