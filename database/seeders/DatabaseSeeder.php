@@ -17,7 +17,8 @@ class DatabaseSeeder extends Seeder
             PassengerSeeder::class,
             FlightSeeder::class,
         ]);
-
+        //  \App\Models\Passenger::factory(1000)->create();
+        //\App\Models\Flight::factory(50)->create();
 
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',
