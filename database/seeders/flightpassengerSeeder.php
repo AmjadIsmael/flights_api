@@ -8,15 +8,15 @@ use App\Models\Flight;
 use App\Models\Passenger;
 
 
-class flightpassengerSeeder extends Seeder
+class FlightpassengerSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        $passengers = Passenger::take(1000)->get();
-        $flights = Flight::take(50)->get();
+        $passengers = Passenger::all();
+        $flights = Flight::all();
 
         foreach ($passengers as $passenger) {
             $flightIds = $flights->random(mt_rand(2, 3))->pluck('id')->toArray();
