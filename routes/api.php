@@ -19,6 +19,10 @@ use App\Http\Controllers\API\PassengerController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
 Route::prefix('passengers')->group(function () {
     Route::get('/', [App\Http\Controllers\API\PassengerController::class, 'index'])->name('passengers.index');
+});
+Route::prefix('flights')->group(function () {
+    Route::get('/', [App\Http\Controllers\API\FlightController::class, 'index'])->name('flights.index');
 });
