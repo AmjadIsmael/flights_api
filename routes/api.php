@@ -4,6 +4,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\API\PassengerController;
+use App\Http\Controllers\API\FlightController;
+use App\Http\Controllers\API\FlightPassengerController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -26,3 +29,5 @@ Route::prefix('passengers')->group(function () {
 Route::prefix('flights')->group(function () {
     Route::get('/', [App\Http\Controllers\API\FlightController::class, 'index'])->name('flights.index');
 });
+
+Route::get('flights/{flight}/passengers', [FlightPassengerController::class, 'index']);
