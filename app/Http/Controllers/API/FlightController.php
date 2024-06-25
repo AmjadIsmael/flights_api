@@ -27,4 +27,10 @@ class FlightController extends Controller
             ->paginate($request->input('per_page', 100));
         return response()->json($flights);
     }
+
+    public function passengers(Request $request, $id)
+    {
+        $flight = Flight::with('passengers')->findOrFail($id);
+        return response()->json($flight->passengers);
+    }
 }
