@@ -28,9 +28,14 @@ class FlightController extends Controller
         return response()->json($flights);
     }
 
-    public function passengers(Request $request, $id)
+    public function passengers(Flight $flight)
     {
-        $flight = Flight::with('passengers')->findOrFail($id);
-        return response()->json($flight->passengers);
+        return response($flight->load('passengers'));
+    }
+
+
+    public function show(Flight $flight)
+    {
+        return $flight;
     }
 }
