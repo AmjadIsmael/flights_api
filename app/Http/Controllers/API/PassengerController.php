@@ -28,7 +28,10 @@ class PassengerController extends Controller
         return response()->json($passengers);
     }
 
-
+    public function show(Passenger $passenger)
+    {
+        return response()->json($passenger);
+    }
     public function store(Request $request)
     {
         $validatedData = $request->validate([

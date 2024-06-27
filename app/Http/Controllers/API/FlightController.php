@@ -21,7 +21,6 @@ class FlightController extends Controller
                 AllowedFilter::exact('arrival_city'),
                 AllowedFilter::exact('departure_time'),
                 AllowedFilter::exact('arrival_time'),
-
             ])
             ->allowedSorts(['id', 'number', 'departure_city', 'arrival_city', 'departure_time', 'arrival_time', 'created_at', 'updated_at'])
             ->paginate($request->input('per_page', 100));
@@ -36,9 +35,9 @@ class FlightController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'flight_number' => 'required|string|unique:flights',
-            'departure_airport' => 'required|string',
-            'arrival_airport' => 'required|string',
+            'number' => 'required|string|unique:flights',
+            'departure_city' => 'required|string',
+            'arrival_city' => 'required|string',
             'departure_time' => 'required|date_format:Y-m-d H:i:s',
             'arrival_time' => 'required|date_format:Y-m-d H:i:s',
         ]);
@@ -47,12 +46,13 @@ class FlightController extends Controller
 
         return response()->json($flight, 201);
     }
+
     public function update(Request $request, Flight $flight)
     {
         $validatedData = $request->validate([
-            'flight_number' => 'required|string|unique:flights,flight_number,' . $flight->id,
-            'departure_airport' => 'required|string',
-            'arrival_airport' => 'required|string',
+            'number' => 'required|string|unique:flights,number,' . $flight->id,
+            'departure_city' => 'required|string',
+            'arrival_city' => 'required|string',
             'departure_time' => 'required|date_format:Y-m-d H:i:s',
             'arrival_time' => 'required|date_format:Y-m-d H:i:s',
         ]);
@@ -61,6 +61,7 @@ class FlightController extends Controller
 
         return response()->json($flight);
     }
+
     public function destroy(Flight $flight)
     {
         $flight->delete();
