@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\PassengerController;
 use App\Http\Controllers\API\FlightController;
 use App\Http\Controllers\API\FlightPassengerController;
+use App\Http\Controllers\API\UserController;
+
 
 
 /*
@@ -30,3 +32,7 @@ Route::prefix('flights')->group(function () {
     Route::get('/', [App\Http\Controllers\API\FlightController::class, 'index'])->name('flights.index');
 });
 Route::get('/flights/{id}', [FlightController::class, 'show']);
+
+Route::prefix('api')->group(function () {
+    Route::apiResource('users', UserController::class);
+});
