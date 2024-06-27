@@ -33,6 +33,4 @@ Route::prefix('flights')->group(function () {
 });
 Route::get('/flights/{id}', [FlightController::class, 'show']);
 
-Route::prefix('api')->group(function () {
-    Route::apiResource('users', UserController::class);
-});
+Route::apiResource('users', UserController::class);
