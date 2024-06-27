@@ -7,7 +7,7 @@ use App\Http\Controllers\API\PassengerController;
 use App\Http\Controllers\API\FlightController;
 use App\Http\Controllers\API\FlightPassengerController;
 use App\Http\Controllers\API\UserController;
-
+use App\Http\Controllers\AuthController;
 
 
 /*
@@ -35,3 +35,8 @@ Route::middleware("auth:sanctum")->group(function () {
     Route::apiResource('flights', FlightController::class);
     Route::apiResource('passengers', PassengerController::class);
 });
+
+
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
