@@ -27,4 +27,45 @@ class PassengerController extends Controller
             ->paginate($request->input('per_page', 100));
         return response()->json($passengers);
     }
+
+
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'email' => 'required|email|unique:passengers,email',
+            'password' => 'required|unique:passengers,password',
+            'date_of_birth' => 'required|date',
+            'passport_expiry' => 'required|date',
+            'flight_id' => 'required|exists:flights,id',
+        ]);
+
+        $passenger = Passenger::create($validatedData);
+
+        return response()->json($passenger, 201);
+    }
+
+    public function update(Request $request, Passenger $passenger)
+    {
+        $validatedData = $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'email' => 'required|email|unique:passengers,email,' . $passenger->id,
+            'password' => 'required|unique:passengers,password,' . $passenger->id,
+            'date_of_birth' => 'required|date',
+            'passport_expiry' => 'required|date',
+            'flight_id' => 'required|exists:flights,id',
+        ]);
+
+        $passenger->update($validatedData);
+
+        return response()->json($passenger);
+    }
+
+    public function destroy(Passenger $passenger)
+    {
+        $passenger->delete();
+        return response()->json(null, 204);
+    }
 }

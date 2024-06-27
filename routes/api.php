@@ -34,3 +34,5 @@ Route::prefix('flights')->group(function () {
 Route::get('/flights/{id}', [FlightController::class, 'show']);
 
 Route::apiResource('users', UserController::class);
+Route::apiResource('flights', FlightController::class);
+Route::apiResource('passengers', PassengerController::class);
