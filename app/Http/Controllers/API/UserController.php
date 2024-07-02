@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Exports\UsersExport;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -69,5 +71,10 @@ class UserController extends Controller
     {
         $user->delete();
         return response()->json(null, 0);
+    }
+
+    public function exportToExcel()
+    {
+        return Excel::download(new UsersExport, 'users.xlsx');
     }
 }

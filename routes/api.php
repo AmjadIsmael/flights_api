@@ -29,14 +29,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 
-Route::middleware("auth:sanctum")->group(function () {
-
+Route::middleware(['auth:sanctum', 'role:super-admin'])->group(function () {
     Route::apiResource('users', UserController::class);
     Route::apiResource('flights', FlightController::class);
     Route::apiResource('passengers', PassengerController::class);
 });
 
 
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+Route::post('/login', [AuthController::class, 'login'])->middleware('role:super-admin');
+Route::post('/register', [AuthController::class, 'register'])->middleware('role:super-admin');
+Route::post('/logout', [AuthController::class, 'logout'])->middleware(['auth:sanctum', 'role:super-admin']);
+
+Route::get('/users/export', [UserController::class, 'exportToExcel'])->name('users.export');
