@@ -3,7 +3,9 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\User;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,6 +20,17 @@ class DatabaseSeeder extends Seeder
             FlightSeeder::class,
             flightpassengerSeeder::class,
         ]);
+
+        $superAdminRole = Role::create(['name' => 'super-admin']);
+
+        $superAdminUser = User::factory()->create([
+            'name' => 'Super Admin',
+            'email' => 'superadmin@example.com',
+            'password' => bcrypt('password'),
+        ]);
+        $superAdminUser->assignRole($superAdminRole);
+
+
         //  \App\Models\Passenger::factory(1000)->create();
         //\App\Models\Flight::factory(50)->create();
 
