@@ -6,6 +6,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,15 +15,26 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        //   \App\Models\User::factory(10)->create();
+
         $this->call([
             PassengerSeeder::class,
             FlightSeeder::class,
-            flightpassengerSeeder::class,
+            FlightPassengerSeeder::class,
         ]);
 
         $superAdminRole = Role::create(['name' => 'super-admin']);
+        $adminRole = Role::create(['name' => 'admin']);
+        $userRole = Role::create(['name' => 'user']);
 
+        Permission::create(['name' => 'edit-profile']);
+        Permission::create(['name' => 'update-profile']);
+        Permission::create(['name' => 'delete-profile']);
+        Permission::create(['name' => 'view-profile']);
+
+        // Assign permissions to roles
+        $superAdminRole->givePermissionTo(['edit-profile', 'update-profile', 'delete-profile', 'view-profile']);
+
+        // Create users and assign roles
         $superAdminUser = User::factory()->create([
             'name' => 'Super Admin',
             'email' => 'superadmin@example.com',
@@ -38,5 +50,6 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+
     }
 }
