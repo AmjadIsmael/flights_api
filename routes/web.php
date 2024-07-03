@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ExcelController;
+
 
 
 use Illuminate\Foundation\Application;
@@ -43,4 +45,6 @@ Route::middleware(['auth', '!role:super-admin'])->group(function () {
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 });
 
+
+Route::get('/export-to-excel', [ExcelController::class, 'exportToExcel']);
 require __DIR__ . '/auth.php';
