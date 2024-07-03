@@ -36,7 +36,7 @@ Route::middleware(['auth:sanctum', 'role:super-admin'])->group(function () {
 });
 
 
-Route::post('/login', [AuthController::class, 'login'])->middleware('role:super-admin');
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1', 'role:super-admin');
 Route::post('/register', [AuthController::class, 'register'])->middleware('role:super-admin');
 Route::post('/logout', [AuthController::class, 'logout'])->middleware(['auth:sanctum', 'role:super-admin']);
 

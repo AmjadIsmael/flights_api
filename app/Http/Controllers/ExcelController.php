@@ -19,11 +19,11 @@ class ExcelController extends Controller
         $file = fopen($tempFile, 'w');
 
         // Write the header row
-        fputcsv($file, ['ID', 'Name', 'Email', 'Created At']);
+        fputcsv($file, ['ID', 'Name', 'Email', 'Created At', 'email_verified_at']);
 
         // Write the data rows
         foreach ($users as $user) {
-            fputcsv($file, [$user->id, $user->name, $user->email, $user->created_at]);
+            fputcsv($file, [$user->id, $user->name, $user->email, $user->created_at, $user->email_verified_at]);
         }
 
         fclose($file);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Passenger;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 
@@ -24,6 +25,7 @@ class PassengerController extends Controller
 
             ])
             ->allowedSorts(['id', 'first_name', 'last_name', 'email', 'date_of_birth', 'passport_expiry', 'created_at', 'updated_at'])
+            ->remember(60)
             ->paginate($request->input('per_page', 100));
         return response()->json($passengers);
     }
@@ -45,7 +47,7 @@ class PassengerController extends Controller
         ]);
 
         $passenger = Passenger::create($validatedData);
-
+        cache::forget('passengers');
         return response()->json($passenger, 201);
     }
 
@@ -62,6 +64,7 @@ class PassengerController extends Controller
         ]);
 
         $passenger->update($validatedData);
+        cache::forget('passengers');
 
         return response()->json($passenger);
     }
@@ -69,6 +72,8 @@ class PassengerController extends Controller
     public function destroy(Passenger $passenger)
     {
         $passenger->delete();
+        cache::forget('passengers');
+
         return response()->json(null, 204);
     }
 }

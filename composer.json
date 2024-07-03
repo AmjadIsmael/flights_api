@@ -17,6 +17,7 @@
         "maatwebsite/excel": "^1.1",
         "spatie/laravel-permission": "^6.9",
         "spatie/laravel-query-builder": "^5.7",
+        "spatie/laravel-rate-limited-job-middleware": "^2.5",
         "tightenco/ziggy": "^2.2"
     },
     "require-dev": {

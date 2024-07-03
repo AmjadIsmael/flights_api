@@ -73,8 +73,9 @@ class UserController extends Controller
         return response()->json(null, 0);
     }
 
-    public function exportToExcel()
+    /*public function exportToExcel()
     {
         return Excel::download(new UsersExport, 'users.xlsx');
     }
+        */
 }
