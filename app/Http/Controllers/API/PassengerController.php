@@ -11,22 +11,44 @@ use Spatie\QueryBuilder\AllowedFilter;
 
 class PassengerController extends Controller
 {
+    protected $allowedSorts = ['id', 'first_name', 'last_name', 'email', 'date_of_birth', 'passport_expiry', 'created_at', 'updated_at'];
+
     public function index(Request $request)
     {
-        $passengers = QueryBuilder::for(Passenger::class)
-            ->with('flights')
-            ->allowedFilters([
-                AllowedFilter::exact('id'),
-                AllowedFilter::exact('first_name'),
-                AllowedFilter::exact('last_name'),
-                AllowedFilter::exact('email'),
-                AllowedFilter::exact('date_of_birth'),
-                AllowedFilter::exact('passport_expiry'),
+        $cacheKey = 'passengers';
+        $passengers = Cache::remember($cacheKey, 60, function () use ($request) {
+            $query = Passenger::with('flights');
 
-            ])
-            ->allowedSorts(['id', 'first_name', 'last_name', 'email', 'date_of_birth', 'passport_expiry', 'created_at', 'updated_at'])
-            ->remember(60)
-            ->paginate($request->input('per_page', 100));
+            if ($request->has('first_name')) {
+                $query->where('first_name', $request->input('first_name'));
+            }
+
+            if ($request->has('last_name')) {
+                $query->where('last_name', $request->input('last_name'));
+            }
+
+            if ($request->has('email')) {
+                $query->where('email', $request->input('email'));
+            }
+
+            if ($request->has('date_of_birth')) {
+                $query->where('date_of_birth', $request->input('date_of_birth'));
+            }
+
+            if ($request->has('passport_expiry')) {
+                $query->where('passport_expiry', $request->input('passport_expiry'));
+            }
+
+            $sortField = $request->input('sort', 'id');
+            $sortDirection = $request->input('direction', 'asc');
+
+            if (in_array($sortField, $this->allowedSorts)) {
+                $query->orderBy($sortField, $sortDirection);
+            }
+
+            return $query->paginate($request->input('per_page', 100));
+        });
+
         return response()->json($passengers);
     }
 
