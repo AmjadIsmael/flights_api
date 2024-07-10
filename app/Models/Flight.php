@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Passenger;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use OwenIt\Auditing\Contracts\Auditable;
+use OwenIt\Auditing\Auditable as AuditableTrait;
 
-class Flight extends Model
+class Flight extends Model implements Auditable
 {
-    use HasFactory;
+    use HasFactory, AuditableTrait;
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
 
