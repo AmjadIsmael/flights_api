@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Passenger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 
@@ -38,6 +40,13 @@ class PassengerController extends Controller
             if ($request->has('passport_expiry')) {
                 $query->where('passport_expiry', $request->input('passport_expiry'));
             }
+            if ($request->has('image')) {
+                $query->where('image', $request->input('image'));
+            }
+
+            if ($request->has('image_thumbnail')) {
+                $query->where('image_thumbnail', $request->input('image_thumbnail'));
+            }
 
             $sortField = $request->input('sort', 'id');
             $sortDirection = $request->input('direction', 'asc');
@@ -66,9 +75,30 @@ class PassengerController extends Controller
             'date_of_birth' => 'required|date',
             'passport_expiry' => 'required|date',
             'flight_id' => 'required|exists:flights,id',
+            'image' => 'nullable|image|max:2048',
         ]);
 
         $passenger = Passenger::create($validatedData);
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = $image->hashName();
+            $imageThumbName = 'thumb_' . $imageName;
+
+            // Store the original image locally
+            $image->storeAs('public/images', $imageName);
+            $passenger->image = $imageName;
+
+            // Create a thumbnail and store it in S3 storage
+            $thumbnail = Image::make($image)->resize(300, 300, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            });
+            $thumbnailPath = 'images/' . $imageThumbName;
+            Storage::disk('s3')->put($thumbnailPath, $thumbnail->encode());
+            $passenger->image_thumbnail = $thumbnailPath;
+        }
+
+        $passenger->save();
         cache::forget('passengers');
         return response()->json($passenger, 201);
     }
@@ -83,7 +113,25 @@ class PassengerController extends Controller
             'date_of_birth' => 'required|date',
             'passport_expiry' => 'required|date',
             'flight_id' => 'required|exists:flights,id',
+            'image' => 'nullable|image|max:2048',
         ]);
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = $image->hashName();
+            $imageThumbName = 'thumb_' . $imageName;
+
+            $image->storeAs('public/images', $imageName);
+            $passenger->image = $imageName;
+
+            $thumbnail = Image::make($image)->resize(300, 300, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            });
+            $thumbnailPath = 'images/' . $imageThumbName;
+            Storage::disk('s3')->put($thumbnailPath, $thumbnail->encode());
+            $passenger->image_thumbnail = $thumbnailPath;
+        }
 
         $passenger->update($validatedData);
         cache::forget('passengers');
@@ -93,6 +141,14 @@ class PassengerController extends Controller
 
     public function destroy(Passenger $passenger)
     {
+        if ($passenger->image) {
+            Storage::disk('public')->delete('images/' . $passenger->image);
+        }
+
+        if ($passenger->image_thumbnail) {
+            Storage::disk('s3')->delete($passenger->image_thumbnail);
+        }
+
         $passenger->delete();
         cache::forget('passengers');
 

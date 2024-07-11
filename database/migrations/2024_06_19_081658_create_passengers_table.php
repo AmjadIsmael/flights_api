@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('password')->unique();
             $table->date('date_of_birth');
             $table->date('passport_expiry');
+            $table->string('image')->nullable();
+            $table->string('image_thumbnail')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
