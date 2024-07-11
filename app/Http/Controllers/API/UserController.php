@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Exports\UsersExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -25,19 +26,27 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            "name" => "required",
+        $validator = Validator::make($request->all(), [
+            "name" => "required|string|max:255",
             "email" => "required|email|unique:users",
-            "password" => "required|min:8",
+            "password" => "required|string|min:8",
         ]);
-        $user = User::create([
-            "name" => $request->name,
-            "email" => $request->email,
-            "password" => Hash::make($request->password),
-        ]);
-        return response()->json($user);
-    }
 
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $sanitizedData = [
+            "name" => $validator->validated('name'),
+            "email" => $validator->validated('email'),
+            "password" => Hash::make($validator->validated('password')),
+        ];
+
+        $user = User::create($sanitizedData);
+        return response()->json($user, 201);
+    }
     /**
      * Display the specified resource.
      */
@@ -51,18 +60,27 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $request->validate([
-            "name" => "required",
+        $validator = Validator::make($request->all(), [
+            "name" => "required|string|max:255",
             "email" => "required|email|unique:users,email," . $user->id,
-            "password" => "required|min:8",
+            "password" => "required|string|min:8",
         ]);
-        $user->update([
-            "name" => $request->name,
-            "email" => $request->email,
-            "password" => $request->has("password") ? Hash::make($request->password) : $user->password,
-        ]);
-    }
 
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $sanitizedData = [
+            "name" => $validator->validated('name'),
+            "email" => $validator->validated('email'),
+            "password" => $request->has("password") ? Hash::make($validator->validated('password')) : $user->password,
+        ];
+
+        $user->update($sanitizedData);
+        return response()->json($user);
+    }
 
     /**
      * Remove the specified resource from storage.
