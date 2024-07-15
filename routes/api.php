@@ -43,4 +43,3 @@ Route::post('/register', [AuthController::class, 'register'])->middleware('role:
 Route::post('/logout', [AuthController::class, 'logout'])->middleware(['auth:sanctum', 'role:super-admin']);
 
 Route::get('/users/export', [UserController::class, 'exportToExcel'])->name('users.export');
-Route::post('/passengers/{passenger}/image', [PassengerImageController::class, 'uploadImage']);

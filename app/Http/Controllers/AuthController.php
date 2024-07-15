@@ -27,7 +27,7 @@ class AuthController extends Controller
         }
 
         // Revoke all other sessions for the user
-        $user->tokens()->where('id', '!=', $user->currentAccessToken()->id)->delete();
+        $user->tokens()->delete();
 
         $token = $user->createToken("auth_token")->plainTextToken;
         return response()->json([

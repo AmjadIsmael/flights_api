@@ -22,6 +22,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\SetSecurityHeaders::class,
+        \App\Http\Middleware\SanitizeInput::class,
     ];
 
     /**
@@ -74,5 +75,6 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         // ...
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'sanitize.input' => \App\Http\Middleware\SanitizeInput::class,
     ];
 }
